@@ -1,5 +1,6 @@
 "use client";
 
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Menu, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,7 +46,8 @@ export function Header({ onMenuClick, showBack, title, className }: HeaderProps)
                     </div>
                 )}
 
-                <div className="flex-1 flex items-center justify-end">
+                <div className="flex-1 flex items-center justify-end gap-2">
+                    <LanguageSwitcher className="mr-2" />
                     <button
                         onClick={onMenuClick}
                         className="p-2 -mr-2 text-foreground hover:bg-accent rounded-full transition-colors"

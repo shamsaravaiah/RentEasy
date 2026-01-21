@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { Plus, FolderOpen, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ContractStatus } from "@/components/ContractStatusBadge";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface ContractSummary {
     id: string;
@@ -20,6 +21,7 @@ interface ContractSummary {
 export default function ContractsPage() {
     const [contracts, setContracts] = useState<ContractSummary[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchContracts = async () => {
@@ -47,10 +49,10 @@ export default function ContractsPage() {
     return (
         <div className="py-6 md:py-8 space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl md:text-3xl font-bold">Mina kontrakt</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">{t.contracts.myContracts}</h1>
                 <Link href="/contracts/new">
                     <PrimaryButton className="hidden md:flex">
-                        Nytt kontrakt
+                        {t.contracts.newContract}
                         <Plus className="ml-2 h-5 w-5" />
                     </PrimaryButton>
                 </Link>
@@ -61,13 +63,13 @@ export default function ContractsPage() {
                     <div className="bg-background p-4 rounded-full mb-4">
                         <FolderOpen className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h2 className="text-xl font-semibold mb-2">Inga kontrakt än</h2>
+                    <h2 className="text-xl font-semibold mb-2">{t.contracts.noContracts}</h2>
                     <p className="text-muted-foreground mb-6 max-w-sm">
-                        Det ser ut som att du inte har några kontrakt ännu. Skapa ditt första kontrakt idag.
+                        {t.contracts.noContractsDesc}
                     </p>
                     <Link href="/contracts/new">
                         <PrimaryButton>
-                            Skapa nytt kontrakt
+                            {t.contracts.createFirst}
                             <Plus className="ml-2 h-5 w-5" />
                         </PrimaryButton>
                     </Link>

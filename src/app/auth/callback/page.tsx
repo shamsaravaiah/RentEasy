@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { PrimaryButton } from "@/components/PrimaryButton";
+import { useTranslation } from "@/context/LanguageContext";
+
 
 function AuthCallbackContent() {
     // Use status 'verifying', 'success', 'error'
@@ -12,6 +14,7 @@ function AuthCallbackContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const effectRan = useRef(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         // React strict mode runs effects twice, prevent double call
@@ -46,26 +49,26 @@ function AuthCallbackContent() {
             {status === "verifying" && (
                 <>
                     <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
-                    <h1 className="text-2xl font-bold mb-2">Verifierar din identitet...</h1>
-                    <p className="text-muted-foreground">Vänligen vänta medan vi kommunicerar med BankID.</p>
+                    <h1 className="text-2xl font-bold mb-2">{t.auth.verifying}</h1>
+                    <p className="text-muted-foreground">{t.auth.wait}</p>
                 </>
             )}
 
             {status === "success" && (
                 <>
                     <CheckCircle2 className="h-16 w-16 text-green-600 mb-6 animate-in zoom-in duration-300" />
-                    <h1 className="text-2xl font-bold mb-2">Du är inloggad!</h1>
-                    <p className="text-muted-foreground">Skickar dig vidare...</p>
+                    <h1 className="text-2xl font-bold mb-2">{t.auth.success}</h1>
+                    <p className="text-muted-foreground">{t.auth.redirecting}</p>
                 </>
             )}
 
             {status === "error" && (
                 <>
                     <AlertCircle className="h-16 w-16 text-destructive mb-6" />
-                    <h1 className="text-2xl font-bold mb-2">Något gick fel</h1>
-                    <p className="text-muted-foreground mb-8">Vi kunde inte verifiera din identitet. Försök igen.</p>
+                    <h1 className="text-2xl font-bold mb-2">{t.auth.failed}</h1>
+                    <p className="text-muted-foreground mb-8">{t.auth.failedDesc}</p>
                     <PrimaryButton onClick={() => router.push("/auth")} fullWidth>
-                        Försök igen
+                        {t.common.tryAgain}
                     </PrimaryButton>
                 </>
             )}

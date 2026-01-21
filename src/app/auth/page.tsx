@@ -5,11 +5,13 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { ShieldCheck, ArrowRight, AlertCircle } from "lucide-react";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function AuthPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const router = useRouter();
+    const { t } = useTranslation();
 
     const handleLogin = async () => {
         setIsLoading(true);
@@ -20,7 +22,7 @@ export default function AuthPage() {
             // For this mock, we pretend the user did it and goes to callback
             router.push("/auth/callback?code=mock-code");
         } catch (err) {
-            setError("Misslyckades att starta BankID. Försök igen.");
+            setError(t.auth.failedDesc);
         } finally {
             setIsLoading(false);
         }
@@ -32,9 +34,9 @@ export default function AuthPage() {
                 <ShieldCheck className="h-16 w-16 text-primary" />
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">Logga in med BankID</h1>
+            <h1 className="text-3xl font-bold mb-4">{t.auth.title}</h1>
             <p className="text-muted-foreground mb-8 text-lg">
-                För att använda RentEasy behöver du verifiera din identitet. Det är säkert och tar bara några sekunder.
+                {t.auth.description}
             </p>
 
             {error && (
@@ -50,12 +52,12 @@ export default function AuthPage() {
                 fullWidth
                 className="h-14 text-lg"
             >
-                Fortsätt med BankID
+                {t.auth.button}
                 <ArrowRight className="ml-2 h-5 w-5" />
             </PrimaryButton>
 
             <p className="mt-8 text-sm text-muted-foreground">
-                Genom att logga in godkänner du våra <a href="/terms" className="underline hover:text-foreground">villkor</a>.
+                {t.auth.termsStart} <a href="/terms" className="underline hover:text-foreground">{t.auth.termsLink}</a>.
             </p>
         </div>
     );

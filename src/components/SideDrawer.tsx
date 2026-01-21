@@ -5,6 +5,8 @@ import { X, LogOut, FileText, User, HelpCircle, Shield, FileCheck } from "lucide
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { useTranslation } from "@/context/LanguageContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface SideDrawerProps {
     isOpen: boolean;
@@ -13,6 +15,7 @@ interface SideDrawerProps {
 
 export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     const pathname = usePathname();
+    const { t } = useTranslation();
 
     // Close drawer when route changes
     useEffect(() => {
@@ -32,11 +35,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     }, [isOpen]);
 
     const navItems = [
-        { href: "/contracts", label: "Mina kontrakt", icon: FileText },
-        { href: "/account", label: "Mitt konto", icon: User },
-        { href: "/help", label: "Hjälp & FAQ", icon: HelpCircle },
-        { href: "/terms", label: "Användarvillkor", icon: Shield },
-        { href: "/privacy", label: "Integritetspolicy", icon: FileCheck },
+        { href: "/contracts", label: t.nav.contracts, icon: FileText },
+        { href: "/account", label: t.nav.account, icon: User },
+        { href: "/help", label: t.nav.help, icon: HelpCircle },
+        { href: "/terms", label: t.nav.terms, icon: Shield },
+        { href: "/privacy", label: t.nav.privacy, icon: FileCheck },
     ];
 
     return (
@@ -59,14 +62,18 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                 )}
             >
                 <div className="flex items-center justify-between p-4 border-b">
-                    <h2 className="font-semibold text-lg">Meny</h2>
+                    <h2 className="font-semibold text-lg">{t.common.menu}</h2>
                     <button
                         onClick={onClose}
                         className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-accent transition-colors"
-                        aria-label="Stäng meny"
+                        aria-label={t.common.close}
                     >
                         <X className="h-6 w-6" />
                     </button>
+                </div>
+
+                <div className="p-4 border-b flex justify-center">
+                    <LanguageSwitcher />
                 </div>
 
                 <nav className="flex-1 overflow-y-auto py-4">
@@ -97,7 +104,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         className="flex w-full items-center gap-3 px-4 py-3 text-base font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors"
                     >
                         <LogOut className="h-5 w-5" />
-                        Logga ut
+                        {t.common.logout}
                     </button>
                 </div>
             </div>
