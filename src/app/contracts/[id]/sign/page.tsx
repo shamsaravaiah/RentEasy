@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { Loader2, ShieldCheck, CheckCircle2, XCircle } from "lucide-react";
 import { PrimaryButton } from "@/components/PrimaryButton";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function SignPage({ params }: { params: { id: string } }) {
+    const { t } = useTranslation();
     const [status, setStatus] = useState<"initializing" | "pending" | "complete" | "failed">("initializing");
     const [error, setError] = useState("");
     const router = useRouter();
@@ -21,7 +23,7 @@ export default function SignPage({ params }: { params: { id: string } }) {
                 setStatus("pending");
             } catch (err) {
                 setStatus("failed");
-                setError("Kunde inte starta signering. Försök igen.");
+                setError(t('signing.startFailed'));
             }
         };
 
@@ -30,7 +32,7 @@ export default function SignPage({ params }: { params: { id: string } }) {
         return () => {
             if (pollInterval.current) clearInterval(pollInterval.current);
         };
-    }, [params.id]);
+    }, [params.id, t]);
 
     useEffect(() => {
         if (status === "pending" && !pollInterval.current) {
@@ -61,7 +63,7 @@ export default function SignPage({ params }: { params: { id: string } }) {
             {status === "initializing" && (
                 <>
                     <Loader2 className="h-12 w-12 text-primary animate-spin mb-6" />
-                    <h1 className="text-xl font-bold">Förbereder signering...</h1>
+                    <h1 className="text-xl font-bold">{t('signing.preparing')}</h1>
                 </>
             )}
 
@@ -73,12 +75,12 @@ export default function SignPage({ params }: { params: { id: string } }) {
                             <Loader2 className="h-6 w-6 text-primary animate-spin" />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold mb-4">Öppna BankID</h1>
+                    <h1 className="text-2xl font-bold mb-4">{t('signing.openBankID')}</h1>
                     <p className="text-muted-foreground text-lg mb-8 max-w-xs mx-auto">
-                        Verifiera dig i BankID-appen för att signera kontraktet.
+                        {t('signing.instruction')}
                     </p>
                     <PrimaryButton variant="secondary" onClick={handleCancel}>
-                        Avbryt
+                        {t('common.cancel')}
                     </PrimaryButton>
                 </div>
             )}
@@ -88,8 +90,8 @@ export default function SignPage({ params }: { params: { id: string } }) {
                     <div className="mb-6 inline-block p-4 rounded-full bg-green-100 dark:bg-green-900/30">
                         <CheckCircle2 className="h-20 w-20 text-green-600" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">Signering klar!</h1>
-                    <p className="text-muted-foreground">Du skickas tillbaka till kontraktet...</p>
+                    <h1 className="text-2xl font-bold mb-2">{t('signing.success')}</h1>
+                    <p className="text-muted-foreground">{t('signing.successDesc')}</p>
                 </div>
             )}
 
@@ -98,11 +100,11 @@ export default function SignPage({ params }: { params: { id: string } }) {
                     <div className="mb-6 inline-block p-4 rounded-full bg-destructive/10">
                         <XCircle className="h-20 w-20 text-destructive" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">Något gick fel</h1>
-                    <p className="text-muted-foreground mb-8">{error || "Signeringen misslyckades."}</p>
+                    <h1 className="text-2xl font-bold mb-2">{t('signing.failed')}</h1>
+                    <p className="text-muted-foreground mb-8">{error || t('signing.failed')}</p>
                     <div className="flex flex-col gap-3 w-full">
-                        <PrimaryButton onClick={() => window.location.reload()} fullWidth>Försök igen</PrimaryButton>
-                        <PrimaryButton variant="secondary" onClick={handleCancel} fullWidth>Avbryt</PrimaryButton>
+                        <PrimaryButton onClick={() => window.location.reload()} fullWidth>{t('common.tryAgain')}</PrimaryButton>
+                        <PrimaryButton variant="secondary" onClick={handleCancel} fullWidth>{t('common.cancel')}</PrimaryButton>
                     </div>
                 </div>
             )}

@@ -1,10 +1,16 @@
+"use client";
+
+import { useTranslation } from "@/context/LanguageContext";
+
 export default function TermsPage() {
+    const { t } = useTranslation();
+
     return (
         <div className="max-w-2xl mx-auto py-8">
-            <h1 className="text-3xl font-bold mb-6">Användarvillkor</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('terms.title')}</h1>
 
             <div className="prose dark:prose-invert">
-                <p className="text-lg mb-6">Senast uppdaterad: 2026-01-21</p>
+                <p className="text-lg mb-6">{t('terms.lastUpdated')} 2026-01-21</p>
 
                 <section className="mb-8">
                     <h2 className="text-xl font-semibold mb-3">1. Användning av tjänsten</h2>

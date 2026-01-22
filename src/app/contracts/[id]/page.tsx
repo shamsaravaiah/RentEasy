@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { ContractStatusBadge, ContractStatus } from "@/components/ContractStatusBadge";
 import { Loader2, Home, Calendar, CreditCard, User, CheckCircle2, FileText, Send, PenLine, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface Contract {
     id: string;
@@ -23,6 +24,7 @@ interface Contract {
 }
 
 export default function ContractDetailsPage({ params }: { params: { id: string } }) {
+    const { t } = useTranslation();
     const [contract, setContract] = useState<Contract | null>(null);
     const [loading, setLoading] = useState(true);
     const [inviteOpen, setInviteOpen] = useState(false);
@@ -52,7 +54,7 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
         );
     }
 
-    if (!contract) return <div>Kontrakt hittades inte</div>;
+    if (!contract) return <div>{t('common.error')}</div>; // Or better "Not found"
 
     const isDraft = contract.status === "draft";
     const isWaiting = contract.status === "waiting";
@@ -74,7 +76,7 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
             <div className="flex flex-col gap-4 border-b pb-6">
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                        <h1 className="text-2xl font-bold">Hyreskontrakt</h1>
+                        <h1 className="text-2xl font-bold">{t('dealRoom.title')}</h1>
                         <p className="text-sm text-muted-foreground">ID: {contract.id}</p>
                     </div>
                     <ContractStatusBadge status={contract.status} className="text-sm px-3 py-1" />
@@ -86,35 +88,35 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="font-semibold text-lg flex items-center gap-2">
                         <Home className="h-5 w-5 text-muted-foreground" />
-                        Objekt
+                        {t('dealRoom.object')}
                     </h2>
                     {isDraft && (
                         <button className="text-sm text-primary hover:underline font-medium">
-                            Ändra
+                            {t('dealRoom.change')}
                         </button>
                     )}
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                        <p className="text-sm text-muted-foreground mb-1">Adress</p>
+                        <p className="text-sm text-muted-foreground mb-1">{t('createContract.address')}</p>
                         <p className="font-medium text-lg">{contract.address}</p>
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
-                            <Calendar className="h-4 w-4" /> Period
+                            <Calendar className="h-4 w-4" /> {t('dealRoom.period')}
                         </p>
                         <p className="font-medium">{contract.startDate} - {contract.endDate}</p>
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground mb-1 flex items-center gap-1">
-                            <CreditCard className="h-4 w-4" /> Hyra
+                            <CreditCard className="h-4 w-4" /> {t('dealRoom.rent')}
                         </p>
                         <p className="font-medium">{contract.rent.toLocaleString("sv-SE")} kr/mån</p>
                     </div>
                     {contract.deposit && (
                         <div>
-                            <p className="text-sm text-muted-foreground mb-1">Deposition</p>
+                            <p className="text-sm text-muted-foreground mb-1">{t('dealRoom.deposit')}</p>
                             <p className="font-medium">{Number(contract.deposit).toLocaleString("sv-SE")} kr</p>
                         </div>
                     )}
@@ -125,25 +127,25 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
             <section className="bg-card border rounded-xl p-6 shadow-sm space-y-6">
                 <h2 className="font-semibold text-lg flex items-center gap-2 mb-2">
                     <User className="h-5 w-5 text-muted-foreground" />
-                    Parter
+                    {t('dealRoom.parties')}
                 </h2>
 
                 {/* You */}
                 <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg">
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="font-bold text-primary">Jag</span>
+                            <span className="font-bold text-primary">{t('dealRoom.me')}</span>
                         </div>
                         <div>
                             <p className="font-medium">{contract.landlord?.name}</p>
                             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                                {contract.role === 'landlord' ? 'Hyresvärd' : 'Hyresgäst'}
+                                {contract.role === 'landlord' ? t('common.landlord') : t('common.tenant')}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-1 text-green-600 text-xs font-medium bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
                         <CheckCircle2 className="h-3 w-3" />
-                        <span>Verifierad</span>
+                        <span>{t('dealRoom.verified')}</span>
                     </div>
                 </div>
 
@@ -157,14 +159,14 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                             <div>
                                 <p className="font-medium">{contract.tenant.name}</p>
                                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                                    {contract.role === 'landlord' ? 'Hyresgäst' : 'Hyresvärd'}
+                                    {contract.role === 'landlord' ? t('common.tenant') : t('common.landlord')}
                                 </p>
                             </div>
                         ) : (
                             <div>
-                                <p className="font-medium text-muted-foreground">Motpart saknas</p>
+                                <p className="font-medium text-muted-foreground">{t('dealRoom.missingParty')}</p>
                                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                                    {contract.role === 'landlord' ? 'Hyresgäst' : 'Hyresvärd'}
+                                    {contract.role === 'landlord' ? t('common.tenant') : t('common.landlord')}
                                 </p>
                             </div>
                         )}
@@ -175,22 +177,22 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                             onClick={() => setInviteOpen(!inviteOpen)}
                             className="text-sm font-medium text-primary hover:underline"
                         >
-                            {inviteOpen ? 'Avbryt' : 'Bjud in'}
+                            {inviteOpen ? t('dealRoom.cancelInvite') : t('dealRoom.invite')}
                         </button>
                     )}
                 </div>
 
                 {inviteOpen && (
                     <div className="mt-4 p-4 bg-primary/5 rounded-lg animate-in slide-in-from-top-2 border border-primary/10">
-                        <h3 className="font-medium mb-2">Bjud in motpart</h3>
+                        <h3 className="font-medium mb-2">{t('dealRoom.inviteTitle')}</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                            Skicka en inbjudningslänk via e-post eller kopiera länken.
+                            {t('dealRoom.inviteDesc')}
                         </p>
 
                         {inviteSent ? (
                             <div className="flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
                                 <CheckCircle2 className="h-5 w-5" />
-                                <span>Inbjudan skickad!</span>
+                                <span>{t('dealRoom.inviteSent')}</span>
                             </div>
                         ) : (
                             <div className="flex gap-2">
@@ -201,7 +203,7 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                                 />
                                 <PrimaryButton onClick={handleInvite} className="h-10 px-4">
                                     <Send className="h-4 w-4 mr-2" />
-                                    Skicka
+                                    {t('dealRoom.send')}
                                 </PrimaryButton>
                             </div>
                         )}
@@ -215,13 +217,13 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                     <FileText className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-lg">Kontraktshandling</h3>
+                    <h3 className="font-semibold text-lg">{t('dealRoom.previewTitle')}</h3>
                     <p className="text-muted-foreground text-sm max-w-xs mx-auto">
-                        Granska avtalet innan signering. Alla villkor finns specificerade.
+                        {t('dealRoom.previewDesc')}
                     </p>
                 </div>
                 <PrimaryButton variant="secondary" fullWidth className="max-w-xs">
-                    Förhandsgranska kontrakt
+                    {t('dealRoom.previewBtn')}
                 </PrimaryButton>
             </section>
 
@@ -236,7 +238,7 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                             onClick={() => router.push(`/contracts/${contract.id}/sign`)}
                         >
                             <PenLine className="mr-2 h-5 w-5" />
-                            Signera med BankID
+                            {t('dealRoom.signBtn')}
                         </PrimaryButton>
                     )}
 
@@ -247,7 +249,7 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                             onClick={() => router.push(`/contracts/${contract.id}/sign`)}
                         >
                             <PenLine className="mr-2 h-5 w-5" />
-                            Signera med BankID
+                            {t('dealRoom.signBtn')}
                         </PrimaryButton>
                     )}
 
@@ -255,18 +257,18 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 justify-center text-green-600 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                                 <CheckCircle2 className="h-5 w-5" />
-                                <span className="font-medium">Kontraktet är signerat och aktivt</span>
+                                <span className="font-medium">{t('dealRoom.signedActive')}</span>
                             </div>
                             <PrimaryButton fullWidth variant="secondary" className="h-14">
                                 <Download className="mr-2 h-5 w-5" />
-                                Ladda ner som PDF
+                                {t('dealRoom.downloadBtn')}
                             </PrimaryButton>
                         </div>
                     )}
 
                     {isCompleted && (
                         <div className="text-center p-4 bg-muted rounded-lg border">
-                            <p className="font-medium">Detta kontrakt är avslutat</p>
+                            <p className="font-medium">{t('dealRoom.completed')}</p>
                         </div>
                     )}
                 </div>

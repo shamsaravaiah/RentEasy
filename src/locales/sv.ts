@@ -10,6 +10,8 @@ export const sv = {
         tryAgain: "Försök igen",
         menu: "Meny",
         logout: "Logga ut",
+        landlord: "Hyresvärd",
+        tenant: "Hyresgäst",
     },
     nav: {
         contracts: "Mina kontrakt",
@@ -107,6 +109,26 @@ export const sv = {
         success: "Signering klar!",
         successDesc: "Du skickas tillbaka till kontraktet...",
         failed: "Något gick fel",
+        startFailed: "Kunde inte starta signering. Försök igen.",
+    },
+    invite: {
+        title: "Har du fått en länk?",
+        description: "Klistra in din inbjudningskod eller länk nedan för att se kontraktet.",
+        placeholder: "Klistra in kod här...",
+        button: "Gå till kontrakt",
+    },
+    help: {
+        title: "Hjälp & FAQ",
+        contactTitle: "Hittade du inte svaret?",
+        contactDesc: "Kontakta oss på",
+    },
+    terms: {
+        title: "Användarvillkor",
+        lastUpdated: "Senast uppdaterad:",
+    },
+    privacy: {
+        title: "Integritetspolicy",
+        lastUpdated: "Senast uppdaterad:",
     },
     account: {
         title: "Mitt konto",

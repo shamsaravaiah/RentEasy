@@ -3,8 +3,9 @@
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Menu, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface HeaderProps {
     onMenuClick: () => void;
@@ -15,6 +16,10 @@ interface HeaderProps {
 
 export function Header({ onMenuClick, showBack, title, className }: HeaderProps) {
     const router = useRouter();
+    const pathname = usePathname();
+    const { t } = useTranslation();
+
+    const displayBack = showBack ?? pathname !== "/";
 
     return (
         <header
@@ -25,11 +30,11 @@ export function Header({ onMenuClick, showBack, title, className }: HeaderProps)
         >
             <div className="flex h-14 items-center px-4 md:px-6">
                 <div className="flex-1 flex items-center justify-start">
-                    {showBack ? (
+                    {displayBack ? (
                         <button
                             onClick={() => router.back()}
                             className="p-2 -ml-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-accent transition-colors"
-                            aria-label="Gå tillbaka"
+                            aria-label={t('common.back')}
                         >
                             <ChevronLeft className="h-6 w-6" />
                         </button>
@@ -51,7 +56,7 @@ export function Header({ onMenuClick, showBack, title, className }: HeaderProps)
                     <button
                         onClick={onMenuClick}
                         className="p-2 -mr-2 text-foreground hover:bg-accent rounded-full transition-colors"
-                        aria-label="Öppna meny"
+                        aria-label={t('common.menu')}
                     >
                         <Menu className="h-6 w-6" />
                     </button>

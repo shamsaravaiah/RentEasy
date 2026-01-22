@@ -1,4 +1,7 @@
+"use client";
+
 import { HelpCircle } from "lucide-react";
+import { useTranslation } from "@/context/LanguageContext";
 
 // Minimal Accordion Implementation since I can't use detailed external UI libs, but I'll make a custom one inline or assuming shadcn-like structure if I had it. 
 // Wait, I don't have shadcn components installed. I need to build a simple accordion or just use details/summary.
@@ -6,11 +9,13 @@ import { HelpCircle } from "lucide-react";
 // I will implement a simple Accordion here or just use standard details/summary which is accessible and native.
 
 export default function HelpPage() {
+    const { t } = useTranslation();
+
     return (
         <div className="max-w-2xl mx-auto py-8">
             <div className="flex items-center gap-3 mb-8">
                 <HelpCircle className="h-8 w-8 text-primary" />
-                <h1 className="text-3xl font-bold">Hjälp & FAQ</h1>
+                <h1 className="text-3xl font-bold">{t('help.title')}</h1>
             </div>
 
             <div className="space-y-4">
@@ -37,9 +42,9 @@ export default function HelpPage() {
             </div>
 
             <div className="mt-12 p-6 bg-muted rounded-lg text-center">
-                <h2 className="font-semibold text-lg mb-2">Hittade du inte svaret?</h2>
+                <h2 className="font-semibold text-lg mb-2">{t('help.contactTitle')}</h2>
                 <p className="text-muted-foreground">
-                    Kontakta oss på <a href="mailto:support@renteasy.se" className="text-primary underline">support@renteasy.se</a>
+                    {t('help.contactDesc')} <a href="mailto:support@renteasy.se" className="text-primary underline">support@renteasy.se</a>
                 </p>
             </div>
         </div>

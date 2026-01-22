@@ -12,6 +12,8 @@ export const en: Dictionary = {
         tryAgain: "Try again",
         menu: "Menu",
         logout: "Logout",
+        landlord: "Landlord",
+        tenant: "Tenant",
     },
     nav: {
         contracts: "My Contracts",
@@ -109,6 +111,26 @@ export const en: Dictionary = {
         success: "Signing complete!",
         successDesc: "Redirecting you back to the contract...",
         failed: "Something went wrong",
+        startFailed: "Could not start signing. Please try again.",
+    },
+    invite: {
+        title: "Received a link?",
+        description: "Paste your invite code or link below to view the contract.",
+        placeholder: "Paste code here...",
+        button: "Go to contract",
+    },
+    help: {
+        title: "Help & FAQ",
+        contactTitle: "Didn't find the answer?",
+        contactDesc: "Contact us at",
+    },
+    terms: {
+        title: "Terms of Service",
+        lastUpdated: "Last updated:",
+    },
+    privacy: {
+        title: "Privacy Policy",
+        lastUpdated: "Last updated:",
     },
     account: {
         title: "My Account",
