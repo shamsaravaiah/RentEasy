@@ -9,7 +9,7 @@ type Language = "sv" | "en";
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: Dictionary;
+    t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -32,7 +32,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         document.documentElement.lang = lang;
     };
 
-    const t = language === "sv" ? sv : en;
+    const t = (key: string): string => {
+        const keys = key.split('.');
+        let value: any = language === 'sv' ? sv : en;
+
+        for (const k of keys) {
+            if (value === undefined) return key;
+            value = value[k];
+        }
+
+        return (typeof value === 'string') ? value : key;
+    };
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>

@@ -35,11 +35,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
     }, [isOpen]);
 
     const navItems = [
-        { href: "/contracts", label: t.nav.contracts, icon: FileText },
-        { href: "/account", label: t.nav.account, icon: User },
-        { href: "/help", label: t.nav.help, icon: HelpCircle },
-        { href: "/terms", label: t.nav.terms, icon: Shield },
-        { href: "/privacy", label: t.nav.privacy, icon: FileCheck },
+        { href: "/contracts", label: t('nav.contracts'), icon: FileText },
+        { href: "/account", label: t('nav.account'), icon: User },
+        { href: "/help", label: t('nav.help'), icon: HelpCircle },
+        { href: "/terms", label: t('nav.terms'), icon: Shield },
+        { href: "/privacy", label: t('nav.privacy'), icon: FileCheck },
     ];
 
     return (
@@ -62,11 +62,11 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                 )}
             >
                 <div className="flex items-center justify-between p-4 border-b">
-                    <h2 className="font-semibold text-lg">{t.common.menu}</h2>
+                    <h2 className="font-semibold text-lg">{t('common.menu')}</h2>
                     <button
                         onClick={onClose}
                         className="p-2 -mr-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-accent transition-colors"
-                        aria-label={t.common.close}
+                        aria-label={t('common.close')}
                     >
                         <X className="h-6 w-6" />
                     </button>
@@ -104,7 +104,7 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                         className="flex w-full items-center gap-3 px-4 py-3 text-base font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors"
                     >
                         <LogOut className="h-5 w-5" />
-                        {t.common.logout}
+                        {t('common.logout')}
                     </button>
                 </div>
             </div>

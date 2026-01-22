@@ -22,7 +22,7 @@ export default function AuthPage() {
             // For this mock, we pretend the user did it and goes to callback
             router.push("/auth/callback?code=mock-code");
         } catch (err) {
-            setError(t.auth.failedDesc);
+            setError(t('auth.failedDesc'));
         } finally {
             setIsLoading(false);
         }
@@ -34,9 +34,9 @@ export default function AuthPage() {
                 <ShieldCheck className="h-16 w-16 text-primary" />
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{t.auth.title}</h1>
+            <h1 className="text-3xl font-bold mb-4">{t('auth.title')}</h1>
             <p className="text-muted-foreground mb-8 text-lg">
-                {t.auth.description}
+                {t('auth.description')}
             </p>
 
             {error && (
@@ -52,12 +52,12 @@ export default function AuthPage() {
                 fullWidth
                 className="h-14 text-lg"
             >
-                {t.auth.button}
+                {t('auth.button')}
                 <ArrowRight className="ml-2 h-5 w-5" />
             </PrimaryButton>
 
             <p className="mt-8 text-sm text-muted-foreground">
-                {t.auth.termsStart} <a href="/terms" className="underline hover:text-foreground">{t.auth.termsLink}</a>.
+                {t('auth.termsStart')} <a href="/terms" className="underline hover:text-foreground">{t('auth.termsLink')}</a>.
             </p>
         </div>
     );

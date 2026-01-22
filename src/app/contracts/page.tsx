@@ -49,10 +49,10 @@ export default function ContractsPage() {
     return (
         <div className="py-6 md:py-8 space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl md:text-3xl font-bold">{t.contracts.myContracts}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">{t('contracts.myContracts')}</h1>
                 <Link href="/contracts/new">
                     <PrimaryButton className="hidden md:flex">
-                        {t.contracts.newContract}
+                        {t('contracts.newContract')}
                         <Plus className="ml-2 h-5 w-5" />
                     </PrimaryButton>
                 </Link>
@@ -63,13 +63,13 @@ export default function ContractsPage() {
                     <div className="bg-background p-4 rounded-full mb-4">
                         <FolderOpen className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h2 className="text-xl font-semibold mb-2">{t.contracts.noContracts}</h2>
+                    <h2 className="text-xl font-semibold mb-2">{t('contracts.noContracts')}</h2>
                     <p className="text-muted-foreground mb-6 max-w-sm">
-                        {t.contracts.noContractsDesc}
+                        {t('contracts.noContractsDesc')}
                     </p>
                     <Link href="/contracts/new">
                         <PrimaryButton>
-                            {t.contracts.createFirst}
+                            {t('contracts.createFirst')}
                             <Plus className="ml-2 h-5 w-5" />
                         </PrimaryButton>
                     </Link>

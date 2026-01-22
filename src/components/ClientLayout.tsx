@@ -36,9 +36,9 @@ function FooterContent() {
                 © 2026 RentEasy. All rights reserved.
             </p>
             <div className="flex gap-4 text-sm text-muted-foreground">
-                <a href="/terms" className="underline hover:text-foreground">{t.nav.terms}</a>
-                <a href="/privacy" className="underline hover:text-foreground">{t.nav.privacy}</a>
-                <a href="/help" className="underline hover:text-foreground">{t.nav.help}</a>
+                <a href="/terms" className="underline hover:text-foreground">{t('nav.terms')}</a>
+                <a href="/privacy" className="underline hover:text-foreground">{t('nav.privacy')}</a>
+                <a href="/help" className="underline hover:text-foreground">{t('nav.help')}</a>
             </div>
         </div>
     );
