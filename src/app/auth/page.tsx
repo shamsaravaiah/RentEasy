@@ -8,6 +8,7 @@ import { api } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "@/context/LanguageContext";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const AUTH_REDIRECT_KEY = "authRedirect";
 
@@ -61,7 +62,7 @@ export default function AuthPage() {
         (async () => {
             const { data, error } = await supabase.auth.getUser();
             if (cancelled || error) return;
-            const user = data.user;
+            const user: User | null = data.user;
             if (!user) return;
             const target = getRedirectTarget();
             if (typeof window !== "undefined") sessionStorage.removeItem(AUTH_REDIRECT_KEY);

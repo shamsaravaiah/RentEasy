@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import type { ContractStatus } from "@/components/ContractStatusBadge";
+import type { User } from "@supabase/supabase-js";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const INVITE_TOKEN_REGEX = /^[a-f0-9]{16}$/i;
@@ -74,25 +75,25 @@ export const api = {
   contracts: {
     list: async () => {
       const supabase = createClient();
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw new Error(error.message);
-      const user = data.user;
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) throw new Error(authError.message);
+      const user: User | null = data.user;
       if (!user) return [];
 
-      const { data, error } = await supabase
+      const { data: listData, error: listError } = await supabase
         .from("contracts")
         .select("id, address, start_date, end_date, rent, status, created_by")
         .order("created_at", { ascending: false });
 
-      if (error) throw new Error(error.message);
-      return (data ?? []).map((row) => mapContractRow(row, user.id));
+      if (listError) throw new Error(listError.message);
+      return (listData ?? []).map((row) => mapContractRow(row, user.id));
     },
     get: async (id: string) => {
       assertValidContractId(id);
       const supabase = createClient();
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw new Error(error.message);
-      const user = data.user;
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) throw new Error(authError.message);
+      const user: User | null = data.user;
       if (!user) throw new Error("Not authenticated");
 
       const { data: contract, error: contractError } = await supabase
@@ -178,7 +179,7 @@ export const api = {
       const supabase = createClient();
       const { data: authData, error: authError } = await supabase.auth.getUser();
       if (authError) throw new Error(authError.message);
-      const user = authData.user;
+      const user: User | null = authData.user;
       if (!user) throw new Error("Not authenticated");
 
       const profile = await supabase
@@ -236,18 +237,18 @@ export const api = {
     delete: async (id: string) => {
       assertValidContractId(id);
       const supabase = createClient();
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw new Error(error.message);
-      const user = data.user;
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) throw new Error(authError.message);
+      const user: User | null = data.user;
       if (!user) throw new Error("Not authenticated");
 
-      const { data: deleted, error } = await supabase
+      const { data: deleted, error: deleteError } = await supabase
         .from("contracts")
         .delete()
         .eq("id", id)
         .select("id");
 
-      if (error) throw new Error(error.message);
+      if (deleteError) throw new Error(deleteError.message);
       if (!deleted || deleted.length === 0) {
         throw new Error("Could not delete contract. Only draft or unsigned contracts can be deleted.");
       }
@@ -294,14 +295,14 @@ export const api = {
     create: async (contractId: string, role: "landlord" | "tenant", email?: string) => {
       assertValidContractId(contractId);
       const supabase = createClient();
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw new Error(error.message);
-      const user = data.user;
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError) throw new Error(authError.message);
+      const user: User | null = data.user;
       if (!user) throw new Error("Not authenticated");
 
       const token = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
 
-      const { error } = await supabase.from("invites").insert({
+      const { error: inviteInsertError } = await supabase.from("invites").insert({
         contract_id: contractId,
         token,
         email: email ?? null,
@@ -309,7 +310,7 @@ export const api = {
         invited_by: user.id,
       });
 
-      if (error) throw new Error(error.message);
+      if (inviteInsertError) throw new Error(inviteInsertError.message);
 
       const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
       return { inviteLink: `${baseUrl}/invite/${token}`, token };

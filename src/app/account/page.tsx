@@ -6,6 +6,7 @@ import { User, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import type { User as AuthUser } from "@supabase/supabase-js";
 import { useTranslation } from "@/context/LanguageContext";
 
 export default function AccountPage() {
@@ -22,7 +23,7 @@ export default function AccountPage() {
                 router.push("/");
                 return;
             }
-            const authUser = data.user;
+            const authUser: AuthUser | null = data.user;
             if (!authUser) {
                 router.push("/");
                 return;

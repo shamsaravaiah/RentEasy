@@ -6,6 +6,7 @@ import { EmailAuthModal } from "@/components/EmailAuthModal";
 import { CheckCircle2, Mail } from "lucide-react";
 import { useTranslation } from "@/context/LanguageContext";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 async function waitForSessionThenGoToApp(maxMs = 4000): Promise<void> {
   const supabase = createClient();
@@ -34,7 +35,7 @@ export default function LandingPage() {
     (async () => {
       const { data, error } = await supabase.auth.getUser();
       if (cancelled || error) return;
-      const user = data.user;
+      const user: User | null = data.user;
       if (!user) return;
       window.location.assign("/rentEasy");
     })();

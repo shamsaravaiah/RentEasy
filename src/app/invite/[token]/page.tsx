@@ -19,6 +19,7 @@ import { useTranslation } from "@/context/LanguageContext";
 import { ContractStatusBadge } from "@/components/ContractStatusBadge";
 import type { ContractStatus } from "@/components/ContractStatusBadge";
 import { EmailAuthModal } from "@/components/EmailAuthModal";
+import type { User as AuthUser } from "@supabase/supabase-js";
 
 const INVITE_TOKEN_REGEX = /^[a-f0-9]{16}$/i;
 
@@ -169,7 +170,7 @@ export default function InviteLandingPage({
     refreshAfterAuthRef.current = async () => {
       setLoading(true);
       const { data, error } = await supabase.auth.getUser();
-      const u = error ? null : data.user ?? null;
+      const u: AuthUser | null = error ? null : data.user ?? null;
       if (u) await run(u);
     };
 
@@ -185,7 +186,7 @@ export default function InviteLandingPage({
         }
       }).data.subscription;
 
-      let user: { id: string; email?: string; user_metadata?: Record<string, unknown> } | null = null;
+      let user: AuthUser | null = null;
       const first = await supabase.auth.getUser();
       if (!first.error) user = first.data.user ?? null;
       if (!user) {

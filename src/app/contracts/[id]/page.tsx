@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import type { User as AuthUser } from "@supabase/supabase-js";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { ContractStatusBadge, ContractStatus } from "@/components/ContractStatusBadge";
 import { Loader2, Home, Calendar, CreditCard, User, CheckCircle2, FileText, PenLine, Download, Copy, Trash2, Link2 } from "lucide-react";
@@ -46,7 +47,7 @@ export default function ContractDetailsPage({ params }: { params: Promise<{ id: 
                 router.replace("/");
                 return;
             }
-            let user = data.user;
+            let user: AuthUser | null = data.user;
             if (!user) {
                 await new Promise((r) => setTimeout(r, 600));
                 const retry = await supabase.auth.getUser();

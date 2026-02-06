@@ -4,6 +4,7 @@ import { useEffect, useState, type ElementType } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 import { ContractCard } from "@/components/ContractCard";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Plus, FolderOpen, Loader2, Inbox, FileEdit } from "lucide-react";
@@ -35,7 +36,7 @@ export function ContractsDashboard() {
         router.replace("/");
         return;
       }
-      let user = data.user;
+      let user: User | null = data.user;
       if (!user) {
         await new Promise((r) => setTimeout(r, 600));
         const retry = await supabase.auth.getUser();

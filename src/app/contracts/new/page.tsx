@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 import { Building2, UserCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/context/LanguageContext";
@@ -23,7 +24,7 @@ export default function NewContractPage() {
                 setAuthChecked(true);
                 return;
             }
-            const user = data.user;
+            const user: User | null = data.user;
             if (!user) router.replace("/");
             setAuthChecked(true);
         })();
