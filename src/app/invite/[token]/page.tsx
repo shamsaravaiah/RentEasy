@@ -168,7 +168,8 @@ export default function InviteLandingPage({
 
     refreshAfterAuthRef.current = async () => {
       setLoading(true);
-      const u = (await supabase.auth.getUser()).data?.user ?? null;
+      const { data, error } = await supabase.auth.getUser();
+      const u = error ? null : data.user ?? null;
       if (u) await run(u);
     };
 
@@ -184,11 +185,14 @@ export default function InviteLandingPage({
         }
       }).data.subscription;
 
-      let user = (await supabase.auth.getUser()).data?.user ?? null;
+      let user: { id: string; email?: string; user_metadata?: Record<string, unknown> } | null = null;
+      const first = await supabase.auth.getUser();
+      if (!first.error) user = first.data.user ?? null;
       if (!user) {
         await new Promise((r) => setTimeout(r, 400));
         if (!mounted) return;
-        user = (await supabase.auth.getUser()).data?.user ?? null;
+        const retry = await supabase.auth.getUser();
+        if (!retry.error) user = retry.data.user ?? null;
       }
 
       await run(user);

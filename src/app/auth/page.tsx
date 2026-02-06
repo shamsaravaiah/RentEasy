@@ -26,9 +26,11 @@ async function waitForSessionThenRedirect(target: string, maxMs = 4000): Promise
     const supabase = createClient();
     const step = 150;
     for (let elapsed = 0; elapsed < maxMs; elapsed += step) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            if (typeof window !== "undefined") window.location.assign(target);
+        const { data, error } = await supabase.auth.getSession();
+        if (error) continue;
+        const session = data.session;
+        if (session && typeof window !== "undefined") {
+            window.location.assign(target);
             return;
         }
         await new Promise((r) => setTimeout(r, step));
@@ -56,12 +58,15 @@ export default function AuthPage() {
     useEffect(() => {
         let cancelled = false;
         const supabase = createClient();
-        supabase.auth.getUser().then(({ data: { user } }) => {
-            if (cancelled || !user) return;
+        (async () => {
+            const { data, error } = await supabase.auth.getUser();
+            if (cancelled || error) return;
+            const user = data.user;
+            if (!user) return;
             const target = getRedirectTarget();
             if (typeof window !== "undefined") sessionStorage.removeItem(AUTH_REDIRECT_KEY);
             window.location.assign(target);
-        });
+        })();
         return () => { cancelled = true; };
     }, [redirect, searchParams]);
 

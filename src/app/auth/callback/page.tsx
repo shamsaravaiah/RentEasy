@@ -24,7 +24,9 @@ async function waitForSessionThenRedirect(target: string, maxMs = 4000): Promise
     const supabase = createClient();
     const step = 150;
     for (let elapsed = 0; elapsed < maxMs; elapsed += step) {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data, error } = await supabase.auth.getSession();
+        if (error) continue;
+        const session = data.session;
         if (session && typeof window !== "undefined") {
             sessionStorage.removeItem(AUTH_REDIRECT_KEY);
             window.location.assign(target);

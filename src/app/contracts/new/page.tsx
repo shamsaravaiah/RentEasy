@@ -17,10 +17,16 @@ export default function NewContractPage() {
 
     useEffect(() => {
         const supabase = createClient();
-        supabase.auth.getUser().then(({ data: { user } }) => {
+        (async () => {
+            const { data, error } = await supabase.auth.getUser();
+            if (error) {
+                setAuthChecked(true);
+                return;
+            }
+            const user = data.user;
             if (!user) router.replace("/");
             setAuthChecked(true);
-        });
+        })();
     }, [router]);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({

@@ -30,11 +30,19 @@ export function ContractsDashboard() {
   useEffect(() => {
     const fetchContracts = async () => {
       const supabase = createClient();
-      let { data: { user } } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        router.replace("/");
+        return;
+      }
+      let user = data.user;
       if (!user) {
-        // Session may still be hydrating after redirect; retry once
         await new Promise((r) => setTimeout(r, 600));
         const retry = await supabase.auth.getUser();
+        if (retry.error) {
+          router.replace("/");
+          return;
+        }
         user = retry.data.user;
       }
       if (!user) {

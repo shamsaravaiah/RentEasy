@@ -41,10 +41,19 @@ export default function ContractDetailsPage({ params }: { params: Promise<{ id: 
     useEffect(() => {
         const fetchContract = async () => {
             const supabase = createClient();
-            let { data: { user } } = await supabase.auth.getUser();
+            const { data, error } = await supabase.auth.getUser();
+            if (error) {
+                router.replace("/");
+                return;
+            }
+            let user = data.user;
             if (!user) {
                 await new Promise((r) => setTimeout(r, 600));
                 const retry = await supabase.auth.getUser();
+                if (retry.error) {
+                    router.replace("/");
+                    return;
+                }
                 user = retry.data.user;
             }
             if (!user) {

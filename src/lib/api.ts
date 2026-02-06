@@ -74,9 +74,9 @@ export const api = {
   contracts: {
     list: async () => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw new Error(error.message);
+      const user = data.user;
       if (!user) return [];
 
       const { data, error } = await supabase
@@ -90,9 +90,9 @@ export const api = {
     get: async (id: string) => {
       assertValidContractId(id);
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw new Error(error.message);
+      const user = data.user;
       if (!user) throw new Error("Not authenticated");
 
       const { data: contract, error: contractError } = await supabase
@@ -176,9 +176,9 @@ export const api = {
       deposit?: string;
     }) => {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError) throw new Error(authError.message);
+      const user = authData.user;
       if (!user) throw new Error("Not authenticated");
 
       const profile = await supabase
@@ -236,9 +236,9 @@ export const api = {
     delete: async (id: string) => {
       assertValidContractId(id);
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw new Error(error.message);
+      const user = data.user;
       if (!user) throw new Error("Not authenticated");
 
       const { data: deleted, error } = await supabase
@@ -294,9 +294,9 @@ export const api = {
     create: async (contractId: string, role: "landlord" | "tenant", email?: string) => {
       assertValidContractId(contractId);
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw new Error(error.message);
+      const user = data.user;
       if (!user) throw new Error("Not authenticated");
 
       const token = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
