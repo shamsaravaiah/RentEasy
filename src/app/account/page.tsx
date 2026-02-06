@@ -1,30 +1,53 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { User, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { useTranslation } from "@/context/LanguageContext";
 
 export default function AccountPage() {
     const { t } = useTranslation();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
-    // Mock user data since we don't have a real persistent auth store in this mock
-    const user = {
-        name: "Anna Andersson",
-        personalNumber: "19800101-XXXX",
-        verifiedAt: "2026-01-21",
-        email: "anna.andersson@example.com"
-    };
+    useEffect(() => {
+        const supabase = createClient();
+        const loadUser = async () => {
+            const { data: { user: authUser } } = await supabase.auth.getUser();
+            if (!authUser) {
+                router.push("/");
+                return;
+            }
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("full_name")
+                .eq("id", authUser.id)
+                .single();
+            setUser({
+                name: profile?.full_name ?? authUser.email?.split("@")[0] ?? "—",
+                email: authUser.email ?? "",
+            });
+        };
+        loadUser();
+    }, [router]);
 
     const handleLogout = async () => {
         setLoading(true);
         await api.auth.logout();
         router.push("/");
     };
+
+    if (!user) {
+        return (
+            <div className="flex justify-center py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-md mx-auto py-8">
@@ -45,16 +68,6 @@ export default function AccountPage() {
                 </div>
 
                 <div className="space-y-4 pt-4 border-t">
-                    <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('account.personalNumber')}</label>
-                        <p className="font-mono text-lg">{user.personalNumber}</p>
-                    </div>
-
-                    <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('account.verifiedSince')}</label>
-                        <p>{user.verifiedAt}</p>
-                    </div>
-
                     <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('account.email')}</label>
                         <p>{user.email}</p>

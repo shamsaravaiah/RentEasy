@@ -2,6 +2,6 @@
 
 import { ContractsDashboard } from "@/components/ContractsDashboard";
 
-export default function ContractsPage() {
+export default function RentEasyPage() {
   return <ContractsDashboard />;
 }

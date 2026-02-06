@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sv">
-      <body className={`${inter.className} min-h-screen bg-background font-sans antialiased text-foreground`}>
+    <html lang="en">
+      <body className={`${inter.className} min-h-screen flex flex-col bg-background font-sans antialiased text-foreground`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

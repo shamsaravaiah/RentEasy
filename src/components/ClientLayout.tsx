@@ -14,16 +14,16 @@ function ClientLayoutContent({ children }: { children: React.ReactNode }) {
     // We can use translation hook here later if footer needs translation
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Header onMenuClick={() => setIsDrawerOpen(true)} />
             <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
             <main className="flex-1 flex flex-col w-full max-w-5xl mx-auto p-4 md:p-6">
                 {children}
             </main>
-            <footer className="border-t py-6 md:py-0">
+            <footer className="mt-auto border-t py-6 md:py-0">
                 <FooterContent />
             </footer>
-        </>
+        </div>
     );
 }
 

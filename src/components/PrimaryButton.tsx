@@ -37,7 +37,9 @@ export function PrimaryButton({
             disabled={disabled || loading}
             {...props}
         >
-            {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+            <span className={cn("inline-flex shrink-0 mr-2 w-5 h-5 items-center justify-center", !loading && "!m-0 !w-0 !min-w-0 overflow-hidden opacity-0")}>
+                <Loader2 className="h-5 w-5 animate-spin" />
+            </span>
             {children}
         </button>
     );

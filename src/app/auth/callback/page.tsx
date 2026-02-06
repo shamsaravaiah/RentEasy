@@ -6,7 +6,37 @@ import { api } from "@/lib/api";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useTranslation } from "@/context/LanguageContext";
+import { createClient } from "@/lib/supabase/client";
 
+const AUTH_REDIRECT_KEY = "authRedirect";
+
+function getRedirectTarget(searchParams: { get: (k: string) => string | null }): string {
+    const fromUrl = searchParams.get("redirect");
+    if (fromUrl && fromUrl.startsWith("/")) return fromUrl;
+    if (typeof window !== "undefined") {
+        const fromStorage = sessionStorage.getItem(AUTH_REDIRECT_KEY);
+        if (fromStorage && fromStorage.startsWith("/")) return fromStorage;
+    }
+    return "/rentEasy";
+}
+
+async function waitForSessionThenRedirect(target: string, maxMs = 4000): Promise<void> {
+    const supabase = createClient();
+    const step = 150;
+    for (let elapsed = 0; elapsed < maxMs; elapsed += step) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && typeof window !== "undefined") {
+            sessionStorage.removeItem(AUTH_REDIRECT_KEY);
+            window.location.assign(target);
+            return;
+        }
+        await new Promise((r) => setTimeout(r, step));
+    }
+    if (typeof window !== "undefined") {
+        sessionStorage.removeItem(AUTH_REDIRECT_KEY);
+        window.location.assign(target);
+    }
+}
 
 function AuthCallbackContent() {
     // Use status 'verifying', 'success', 'error'
@@ -32,17 +62,15 @@ function AuthCallbackContent() {
             try {
                 await api.auth.verifyCallback(code);
                 setStatus("success");
-                // Redirect after success
-                setTimeout(() => {
-                    router.push("/contracts");
-                }, 1500);
+                const target = getRedirectTarget(searchParams);
+                await waitForSessionThenRedirect(target);
             } catch (err) {
                 setStatus("error");
             }
         };
 
         verify();
-    }, [searchParams, router]);
+    }, [searchParams]);
 
     return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center p-4 text-center max-w-md mx-auto">

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { api } from "@/lib/api";
+import { createClient } from "@/lib/supabase/client";
 import { Building2, UserCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/context/LanguageContext";
@@ -12,6 +13,15 @@ export default function NewContractPage() {
     const { t } = useTranslation();
     const router = useRouter();
     const [step, setStep] = useState(1);
+    const [authChecked, setAuthChecked] = useState(false);
+
+    useEffect(() => {
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (!user) router.replace("/");
+            setAuthChecked(true);
+        });
+    }, [router]);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         role: "", // "landlord" | "tenant"
@@ -34,6 +44,14 @@ export default function NewContractPage() {
             setLoading(false);
         }
     };
+
+    if (!authChecked) {
+        return (
+            <div className="flex justify-center py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
+        );
+    }
 
     const isStep1Valid = !!formData.role;
     const isStep2Valid =
